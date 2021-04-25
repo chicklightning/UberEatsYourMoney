@@ -19,6 +19,7 @@ import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
 import com.google.api.services.gmail.model.Label;
 import com.google.api.services.gmail.model.ListLabelsResponse;
+import java.io.FileInputStream;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -30,11 +31,11 @@ import java.util.List;
 
 /**
  *
- * @author Gab
+ * @author Gabbo
  */
 public class UberEatsYourMoney {
     
-    private static final String APPLICATION_NAME = "Gmail API Java Quickstart";
+    private static final String APPLICATION_NAME = "Uber Eats [Your Money]";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
 
@@ -42,8 +43,8 @@ public class UberEatsYourMoney {
      * Global instance of the scopes required by this quickstart.
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
-    private static final List<String> SCOPES = Collections.singletonList(GmailScopes.GMAIL_LABELS);
-    private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+    private static final List<String> SCOPES = Collections.singletonList(GmailScopes.GMAIL_READONLY);
+    private static final String CREDENTIALS_FILE_PATH = "./credentials.json";
 
     /**
      * Creates an authorized Credential object.
@@ -53,7 +54,7 @@ public class UberEatsYourMoney {
      */
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
-        InputStream in = UberEatsYourMoney.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+        InputStream in = new FileInputStream(CREDENTIALS_FILE_PATH);
         if (in == null) {
             throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
         }
@@ -78,16 +79,16 @@ public class UberEatsYourMoney {
 
         // Print the labels in the user's account.
         String user = "me";
-        ListLabelsResponse listResponse = service.users().labels().list(user).execute();
-        List<Label> labels = listResponse.getLabels();
-        if (labels.isEmpty()) {
-            System.out.println("No labels found.");
-        } else {
-            System.out.println("Labels:");
-            for (Label label : labels) {
-                System.out.printf("- %s\n", label.getName());
-            }
-        }
+//        ListLabelsResponse listResponse = service.users().labels().list(user).execute();
+//        List<Label> labels = listResponse.getLabels();
+//        if (labels.isEmpty()) {
+//            System.out.println("No labels found.");
+//        } else {
+//            System.out.println("Labels:");
+//            for (Label label : labels) {
+//                System.out.printf("- %s\n", label.getName());
+//            }
+//        }
     }
     
 }
