@@ -45,7 +45,7 @@ public class TimerNightlyUpdate extends TimerTask{
         Calendar calEnd = new GregorianCalendar();
         calEnd.setTime(new Date());
         calEnd.set(Calendar.DAY_OF_YEAR, calEnd.get(Calendar.DAY_OF_YEAR)+1);
-        calEnd.set(Calendar.HOUR_OF_DAY, 0);
+        calEnd.set(Calendar.HOUR_OF_DAY, 21);
         calEnd.set(Calendar.MINUTE, 0);
         calEnd.set(Calendar.SECOND, 0);
         calEnd.set(Calendar.MILLISECOND, 0);

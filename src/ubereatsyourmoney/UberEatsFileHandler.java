@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,7 +44,7 @@ public class UberEatsFileHandler {
     }
     
     public UberEatsTotals fetchTotals() throws IOException {
-        double weekly = 0, monthly = 0, ytd = 0;
+        BigDecimal weekly = BigDecimal.ZERO, monthly = BigDecimal.ZERO, ytd = BigDecimal.ZERO;
         
         File file = new File(this.FilePath);
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -53,15 +54,15 @@ public class UberEatsFileHandler {
         while ((line = br.readLine()) != null) { // Hardcoded mess, oh well
             switch (loop) {
                 case 0:
-                    weekly = Double.parseDouble(line);
+                    weekly = new BigDecimal(line);
                     loop++;
                     break;
                 case 1:
-                    monthly = Double.parseDouble(line);
+                    monthly = new BigDecimal(line);
                     loop++;
                     break;
                 case 2:
-                    ytd = Double.parseDouble(line);
+                    ytd = new BigDecimal(line);
                     loop++;
                     break;
                 default:

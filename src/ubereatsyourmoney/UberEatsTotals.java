@@ -5,37 +5,39 @@
  */
 package ubereatsyourmoney;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author Gab
  */
 public class UberEatsTotals {
     
-    public double WeeklyTotal;
-    public double MonthlyTotal;
-    public double YearToDateTotal;
+    public BigDecimal WeeklyTotal;
+    public BigDecimal MonthlyTotal;
+    public BigDecimal YearToDateTotal;
     
-    public UberEatsTotals(double weeklyTotal, double monthlyTotal, double ytdTotal) {
+    public UberEatsTotals(BigDecimal weeklyTotal, BigDecimal monthlyTotal, BigDecimal ytdTotal) {
         this.WeeklyTotal = weeklyTotal;
         this.MonthlyTotal = monthlyTotal;
         this.YearToDateTotal = ytdTotal;
     }
 
-    public void AddToAllTotals(double amount) {
-        this.WeeklyTotal += amount;
-        this.MonthlyTotal += amount;
-        this.YearToDateTotal += amount;
+    public void AddToAllTotals(BigDecimal amount) {
+        this.WeeklyTotal = this.WeeklyTotal.add(amount);
+        this.MonthlyTotal = this.MonthlyTotal.add(amount);
+        this.YearToDateTotal = this.YearToDateTotal.add(amount);
     }
     
     public void resetWeeklyTotal() {
-        this.WeeklyTotal = 0;
+        this.WeeklyTotal = BigDecimal.ZERO;
     }
     
     public void resetMonthlyTotal() {
-        this.MonthlyTotal = 0;
+        this.MonthlyTotal = BigDecimal.ZERO;
     }
     
     public void resetYearToDateTotal() {
-        this.YearToDateTotal = 0;
+        this.YearToDateTotal = BigDecimal.ZERO;
     }
 }

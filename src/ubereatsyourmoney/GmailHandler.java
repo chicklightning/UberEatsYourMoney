@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
@@ -60,51 +61,43 @@ public class GmailHandler {
         // Get messages from the last day; because totals are calculated 1x per day, any
         // messages newer than this have not had their
         // totals factored in
-        String query = "from:uber.us@uber.com newer_than:" + daysSinceLastMod + "d in:anywhere";
+//        String query = "from:uber.us@uber.com newer_than:" + daysSinceLastMod + "d in:anywhere";
+        String query = "from:uber.us@uber.com newer_than:1d in:anywhere";
         List<Message> uberEatsMessages = this.Service.users().messages().list(USER).setQ(query).execute().getMessages();
-        System.out.println(uberEatsMessages.size() + " total message(s) found in last " + daysSinceLastMod + " day(s).");
+//        System.out.println(uberEatsMessages.size() + " total message(s) found in last " + daysSinceLastMod + " day(s).");
+        System.out.println(uberEatsMessages.size() + " total message(s) found in last day.");
         return uberEatsMessages;
     }
     
-    public double calculateTotalsFromEmails(List<Message> uberEatsMessages) {
+    public BigDecimal calculateTotalsFromEmails(List<Message> uberEatsMessages) {
         // Add new Uber Eats totals from email, specifically the snippets
-        double sum = 0;
+        BigDecimal sum = new BigDecimal(0);
         sum = uberEatsMessages.stream().map(message -> {
             
             String messageContent = "";
             try {
                 Message fullMessage = this.Service.users().messages().get(USER, message.getId()).setFormat("FULL").execute();
                 messageContent = getContent(fullMessage);
-                
-                if (!messageContent.contains("updated receipt")) {
-                    messageContent = "";
-                }
             } catch (IOException ex) {
                 System.out.println("Unable to obtain full message for message " + message.getId());
             }
             
             return (messageContent == null || !messageContent.contains("updated receipt")) ? "" : messageContent;
-        }).map(snippet -> {
-            String regExp = "^\\$(([1-9]\\d{0,2}(,\\d{3})*)|(([1-9]\\d*)?\\d))(\\.\\d\\d)?$";
+        }).map(messageContent -> {
+            String regExp = "\\$((([1-9]\\d{0,2}(,\\d{3})*)|(([1-9]\\d*)?\\d))(\\.\\d\\d)?)";
             Pattern p = Pattern.compile(regExp);
-            System.out.println("Finding matches");
-            Matcher matcher = p.matcher(snippet);
-            
-            System.out.println("Matches processed");
-            while (matcher.find()) {
-                System.out.println("Transaction amount: $" + matcher.group(1));
-            }
-            System.out.println("Transactions reported");
-            return matcher;
-        }).map(matcher -> {
-            double amountSpent = 0;
+            Matcher matcher = p.matcher(messageContent);
+
+            BigDecimal amountSpent = new BigDecimal(0);
             if (matcher.find()) {
-                amountSpent = Double.parseDouble(matcher.group(1));
+                amountSpent = new BigDecimal(matcher.group(1));
+                System.out.println("Transaction amount: $" + amountSpent);
             }
-            
+
             return amountSpent;
-        }).reduce(sum, (accumulator, _item) -> accumulator + _item);
+        }).reduce(BigDecimal.ZERO, BigDecimal::add);
         
+        System.out.println("Total from all emails: " + sum);
         return sum;
     }
     
