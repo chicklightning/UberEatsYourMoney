@@ -15,7 +15,6 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.Base64;
-import com.google.api.client.util.StringUtils;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
@@ -30,8 +29,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,8 +61,7 @@ public class GmailHandler {
         // messages newer than this have not had their
         // totals factored in
         String query = "from:uber.us@uber.com newer_than:" + daysSinceLastMod + "d in:anywhere";
-        String user = "me";
-        List<Message> uberEatsMessages = service.users().messages().list(user).setQ(query).execute().getMessages();
+        List<Message> uberEatsMessages = this.Service.users().messages().list(USER).setQ(query).execute().getMessages();
         System.out.println(uberEatsMessages.size() + " total message(s) found in last " + daysSinceLastMod + " day(s).");
         return uberEatsMessages;
     }

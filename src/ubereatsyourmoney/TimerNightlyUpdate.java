@@ -20,23 +20,26 @@ import java.util.logging.Logger;
  * @author Kevin
  */
 public class TimerNightlyUpdate extends TimerTask{
-    Gmail service;
+    GmailHandler Handler;
     GUI gui;
-    public TimerNightlyUpdate(GUI gui, Gmail service){
-        this.service = service;
+    
+    public TimerNightlyUpdate(GUI gui, GmailHandler handler){
+        this.Handler = handler;
         this.gui = gui;
     }
+    
     @Override
     public void run() {
         try {
             // Get new UberEats emails from the user's account and add to existing totals for display:
-            UberEatsTotals totals = UberEatsYourMoney.getUberEatsTotals(service);
+            UberEatsTotals totals = UberEatsYourMoney.getUberEatsTotals(this.Handler);
             gui.updateUI(totals);
         } catch (IOException ex) {
             Logger.getLogger(TimerNightlyUpdate.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }    
+    
     private static Date getMidnight(){
         
         Calendar calEnd = new GregorianCalendar();
@@ -49,9 +52,10 @@ public class TimerNightlyUpdate extends TimerTask{
         Date midnightTonight = calEnd.getTime();
         return midnightTonight;
       }
+    
     //call this method from your servlet init method
-    public static void startTask(GUI gui, Gmail service){
-        TimerNightlyUpdate task = new TimerNightlyUpdate(gui, service);
+    public static void startTask(GUI gui, GmailHandler handler){
+        TimerNightlyUpdate task = new TimerNightlyUpdate(gui, handler);
         Timer timer = new Timer();  
         timer.schedule(task,getMidnight(),1000*60*60*24); //ms in a day
     }

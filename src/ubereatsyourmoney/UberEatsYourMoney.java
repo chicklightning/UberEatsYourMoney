@@ -23,7 +23,7 @@ public class UberEatsYourMoney {
     private static final String TOTALS_FILE_PATH = "./totals.txt";
     
 
-    private static UberEatsTotals getUberEatsTotals(GmailHandler handler) throws IOException {
+    public static UberEatsTotals getUberEatsTotals(GmailHandler handler) throws IOException {
         UberEatsFileHandler fileHandler = new UberEatsFileHandler(TOTALS_FILE_PATH);
         UberEatsTotals totals = fileHandler.fetchTotals();
         
@@ -31,7 +31,7 @@ public class UberEatsYourMoney {
         
         // Add new Uber Eats totals from email
         List<Message> uberEatsMessages = handler.getUberEatsMessages(duration.toDays());      
-        double sum = GmailHandler.calculateTotalsFromEmails(uberEatsMessages);
+        double sum = handler.calculateTotalsFromEmails(uberEatsMessages);
         totals.AddToAllTotals(sum);
         return totals;
     }
