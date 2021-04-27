@@ -19,14 +19,14 @@ public class UberEatsYourMoney {
     
     private static final String TOTALS_FILE_PATH = "./totals.txt";
     
-    private static UberEatsTotals getUberEatsTotals(Gmail service) throws IOException {
+    private static UberEatsTotals getUberEatsTotals(GmailHandler handler) throws IOException {
         UberEatsFileHandler fileHandler = new UberEatsFileHandler(TOTALS_FILE_PATH);
         UberEatsTotals totals = fileHandler.fetchTotals();
         
         // Add new Uber Eats totals from email
-        List<Message> uberEatsMessages = GmailHandler.getUberEatsMessages(service);
-        double sum = GmailHandler.calculateTotalsFromEmails(uberEatsMessages);
-        totals.AddToAllTotals(sum);
+        List<Message> uberEatsMessages = handler.getUberEatsMessages();
+        double sum = handler.calculateTotalsFromEmails(uberEatsMessages);
+        //totals.AddToAllTotals(sum);
         return totals;
     }
 
@@ -35,9 +35,10 @@ public class UberEatsYourMoney {
         
         // Build a new authorized API client service.
         Gmail service = GmailHandler.buildService();
+        GmailHandler gmailHandler = new GmailHandler(service);
 
         // Get new UberEats emails from the user's account and add to existing totals for display:
-        UberEatsTotals totals = getUberEatsTotals(service);
+        UberEatsTotals totals = getUberEatsTotals(gmailHandler);
     }
     
 }
