@@ -56,10 +56,10 @@ public class GmailHandler {
         return service;
     }
     
-    public static List<Message> getUberEatsMessages(Gmail service) throws IOException {
+    public static List<Message> getUberEatsMessages(long daysSinceLastMod, Gmail service) throws IOException {
         // Get messages from the last day; because totals are calculated 1x per day, any messages newer than this have not had their
         //    totals factored in        
-        String query = "from:uber.us@uber.com newer_than:1d in:anywhere";
+        String query = "from:uber.us@uber.com newer_than:" + daysSinceLastMod + "d in:anywhere";
         String user = "me";
         List<Message> uberEatsMessages = service.users().messages().list(user).setQ(query).execute().getMessages();
         return uberEatsMessages;

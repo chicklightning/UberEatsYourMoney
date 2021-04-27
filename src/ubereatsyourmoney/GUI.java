@@ -11,6 +11,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -32,15 +33,21 @@ public class GUI implements ActionListener{
     private JButton ytd;
     private Font buttonfont = new Font("default", Font.PLAIN,24);
     private Font selectedfont = new Font("default", Font.BOLD, 24);
+    private UberEatsTotals displaytotals;
+    private String state = "weekly";
+    private static final String TOTALS_FILE_PATH = "./totals.txt";
+    
        
-    public GUI() {
+    public GUI() throws IOException {
+        UberEatsFileHandler fh = new UberEatsFileHandler(TOTALS_FILE_PATH);      
+        displaytotals = fh.fetchTotals();
         
         frame = new JFrame();                 
         top = new JPanel();       
         top.setLayout(new BorderLayout());
         
         //CALL GET DOLLAR FUNC (WEEKLY)
-        total = new ResizeLabelFont("$50.32");
+        total = new ResizeLabelFont("$"+displaytotals.WeeklyTotal);
         top.add(total);
         
         //initialize button panel and buttons
@@ -78,23 +85,23 @@ public class GUI implements ActionListener{
     public void actionPerformed(ActionEvent e){
         //highlight button, change total
         if(e.getSource() == weekly){
-            //CALL GET DOLLAR FUNC (WEEKLY)
+            state = "weekly";
             resetButtonFonts();
-            total.setText("$90.32");
+            total.setText("$"+displaytotals.WeeklyTotal);
             total.adaptLabelFont(total);
             weekly.setFont(selectedfont);
         }
         if(e.getSource() == monthly){
-            //CALL GET DOLLAR FUNC (MONTHLY)
+            state = "monthly";
             resetButtonFonts();
-            total.setText("$900.32");
+            total.setText("$"+displaytotals.MonthlyTotal);
             total.adaptLabelFont(total);
             monthly.setFont(selectedfont);
         }
         if(e.getSource() == ytd){
-            //CALL GET DOLLAR FUNC (YEARLY)
+            state = "ytd";
             resetButtonFonts();
-            total.setText("$9000.32");
+            total.setText("$"+displaytotals.YearToDateTotal);
             total.adaptLabelFont(total);
             ytd.setFont(selectedfont);
         }
@@ -105,6 +112,22 @@ public class GUI implements ActionListener{
         weekly.setFont(buttonfont);
         monthly.setFont(buttonfont);
         ytd.setFont(buttonfont);
+    }
+    public void updateUI(UberEatsTotals newtotals){
+        displaytotals = newtotals;
+        switch(state){
+            case "weekly":
+                total.setText("$"+displaytotals.WeeklyTotal);
+                total.adaptLabelFont(total);
+                
+            case "monthly":
+                total.setText("$"+displaytotals.MonthlyTotal);
+                total.adaptLabelFont(total);
+                
+            case "ytd":
+                total.setText("$"+displaytotals.YearToDateTotal);
+                total.adaptLabelFont(total);
+        }
     }
     
     
