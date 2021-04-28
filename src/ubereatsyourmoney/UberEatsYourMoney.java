@@ -28,7 +28,9 @@ public class UberEatsYourMoney {
         UberEatsTotals totals = fileHandler.fetchTotals();
         
         Duration duration = Duration.between(fileHandler.LastModified, LocalDateTime.now());
-        
+        if(duration.toDays() == 0){
+            return totals;
+        }       
         // Add new Uber Eats totals from email
         List<Message> uberEatsMessages = handler.getUberEatsMessages(duration.toDays());      
         BigDecimal sum = handler.calculateTotalsFromEmails(uberEatsMessages);

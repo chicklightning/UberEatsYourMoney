@@ -40,7 +40,7 @@ public class TimerNightlyUpdate extends TimerTask{
         
     }    
     
-    private static Date getMidnight(){
+    private static Date getninepm(){
         
         Calendar calEnd = new GregorianCalendar();
         calEnd.setTime(new Date());
@@ -49,14 +49,14 @@ public class TimerNightlyUpdate extends TimerTask{
         calEnd.set(Calendar.MINUTE, 0);
         calEnd.set(Calendar.SECOND, 0);
         calEnd.set(Calendar.MILLISECOND, 0);
-        Date midnightTonight = calEnd.getTime();
-        return midnightTonight;
+        Date ninepm = calEnd.getTime();
+        return ninepm;
       }
     
     //call this method from your servlet init method
     public static void startTask(GUI gui, GmailHandler handler){
         TimerNightlyUpdate task = new TimerNightlyUpdate(gui, handler);
         Timer timer = new Timer();  
-        timer.schedule(task,getMidnight(),1000*60*60*24); //ms in a day
+        timer.schedule(task, getninepm(),1000*60*60*24); //ms in a day
     }
 }

@@ -43,7 +43,6 @@ public class GUI implements ActionListener{
         top = new JPanel();       
         top.setLayout(new BorderLayout());
         
-        //CALL GET DOLLAR FUNC (WEEKLY)
         total = new ResizeLabelFont("$"+displaytotals.WeeklyTotal);
         top.add(total);
         
@@ -113,18 +112,23 @@ public class GUI implements ActionListener{
     
     public void updateUI(UberEatsTotals newtotals){
         displaytotals = newtotals;
+        System.out.println("state: " + state);
         switch(state){
             case "weekly":
                 total.setText("$"+displaytotals.WeeklyTotal);
                 total.adaptLabelFont(total);
+                break;
                 
             case "monthly":
                 total.setText("$"+displaytotals.MonthlyTotal);
                 total.adaptLabelFont(total);
+                break;
                 
             case "ytd":
                 total.setText("$"+displaytotals.YearToDateTotal);
                 total.adaptLabelFont(total);
+                break;
+                
         }
     }
     
